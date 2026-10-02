@@ -172,7 +172,7 @@ import { POST_DONATION, POST_DONATION_SNAP } from "@/store/donations.module";
 import { GET_FACULTIES } from "@/store/faculties.module";
 import { savePendingPayment, removePendingPayment } from "@/utils/pendingPayments";
 import { prettifyDonationType, describeNotificationChannels } from "@/utils/donationLabels";
-import { syncPaymentStatus, isTerminalPaymentStatus } from "@/utils/midtransPayment";
+import { syncPaymentStatus, isTerminalPaymentStatus, isMidtransEnabled } from "@/utils/midtransPayment";
 import { isNotStartedPaymentSession } from "@/utils/paymentSessionState";
 import { parseDonationAmount, getDonationAmountSummary, formatIDR } from "@/utils/donationAmount";
 
@@ -257,7 +257,7 @@ export default {
         .map(f => `${f.name} (${f.kodeUnik})`);
     },
     paymentMethodOptions() {
-      if (this.mode === "manual") return ["Manual (Transfer Bank)"];
+      if (this.mode === "manual" || !isMidtransEnabled()) return ["Manual (Transfer Bank)"];
       if (this.mode === "midtrans") return ["Online (Midtrans)"];
       return ["Manual (Transfer Bank)", "Online (Midtrans)"];
     },

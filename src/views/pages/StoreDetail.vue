@@ -131,7 +131,8 @@
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-main focus:border-main sm:text-sm"
         >
           <option value="manual">Manual (Transfer Bank)</option>
-          <option value="midtrans" disabled>Online (Midtrans) - Sementara Tidak Tersedia</option>
+          <option v-if="midtransEnabled" value="midtrans">Online (Midtrans)</option>
+          <option v-else value="midtrans" disabled>Online (Midtrans) - Sementara Tidak Tersedia</option>
         </select>
         <span class="block text-sm font-medium text-gray-500 mt-2">
           Total Pembayaran: {{ formatPrice(quantity * currentMerchandise.price) }}
@@ -210,7 +211,7 @@ import { GET_MERCHANDISE_DETAIL } from "@/store/merchandises.module";
 import { POST_TRANSACTION, POST_TRANSACTION_SNAP } from "@/store/transactions.module";
 import Swal from 'sweetalert2';
 import { savePendingPayment, removePendingPayment } from "@/utils/pendingPayments";
-import { syncPaymentStatus, isTerminalPaymentStatus } from "@/utils/midtransPayment";
+import { syncPaymentStatus, isTerminalPaymentStatus, isMidtransEnabled } from "@/utils/midtransPayment";
 import { isNotStartedPaymentSession } from "@/utils/paymentSessionState";
 
 const successLogo = require('@/assets/image/IOM-ITB-PrimaryLogo-blue.png');
@@ -241,6 +242,9 @@ export default {
     };
   },
   computed: {
+    midtransEnabled() {
+      return isMidtransEnabled();
+    },
     currentMerchandise() {
       return this.$store.getters.currentMerchandise?.data || {};
     },

@@ -8,6 +8,8 @@ export default class ConfigProvider {
         "$APPLICATIONINSIGHTS_CONNECTION_STRING",
         API_URL: "$API_URL",
         API_UPLOAD: "$API_UPLOAD",
+        // Saklar sementara pembayaran online — lihat isMidtransEnabled().
+        MIDTRANS_ENABLED: "$MIDTRANS_ENABLED",
       DEFAULT_TIMEZONE: "Asia/Jakarta",
     };
   }

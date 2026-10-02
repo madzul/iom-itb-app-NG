@@ -1,7 +1,7 @@
 <template>
   <Transition name="slide-up">
     <div
-      v-if="pendingList.length > 0"
+      v-if="midtransEnabled && pendingList.length > 0"
       class="fixed bottom-4 right-4 left-4 md:left-auto md:right-6 md:bottom-6 z-[1000] max-w-md mx-auto md:mx-0 pointer-events-none"
     >
       <div
@@ -69,7 +69,7 @@
 <script>
 import Swal from 'sweetalert2';
 import { getPendingPayments, removePendingPayment } from '@/utils/pendingPayments';
-import { cancelPayment, syncPaymentStatus, isTerminalPaymentStatus } from '@/utils/midtransPayment';
+import { cancelPayment, syncPaymentStatus, isTerminalPaymentStatus, isMidtransEnabled } from '@/utils/midtransPayment';
 import { isNotStartedPaymentSession } from '@/utils/paymentSessionState';
 
 export default {
@@ -77,6 +77,7 @@ export default {
   data() {
     return {
       pendingList: [],
+      midtransEnabled: isMidtransEnabled(),
       resumingOrderId: null,
       cancelingOrderId: null,
       refreshTimer: null,

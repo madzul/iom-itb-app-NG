@@ -1,6 +1,13 @@
 import ApiService from "@/store/api.service";
+import config from "@/ConfigProvider";
 import { removePendingPayment } from "@/utils/pendingPayments";
 import { isNotStartedPaymentSession } from "@/utils/paymentSessionState";
+
+// Pembayaran online dinonaktifkan sementara selama Midtrans masih sandbox.
+// Default MATI; nyalakan dengan VUE_APP_MIDTRANS_ENABLED=true saat build.
+// api-NG punya saklar sendiri (MIDTRANS_ENABLED) yang menolak snap-token.
+export const isMidtransEnabled = () =>
+  String(config.value("MIDTRANS_ENABLED") || "").toLowerCase() === "true";
 
 const TERMINAL_PAYMENT_STATUSES = new Set(["settlement", "failed", "expired", "refunded"]);
 

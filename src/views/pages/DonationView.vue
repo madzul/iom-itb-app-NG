@@ -25,6 +25,17 @@
           </div>
         </button>
         <button
+          v-if="midtransEnabled"
+          @click="chooseMidtrans"
+          class="w-full border border-main text-main font-[700] rounded-xl px-4 py-4 text-left hover:bg-blue-50 transition"
+        >
+          <div class="text-[16px] md:text-[18px]">Pembayaran Otomatis</div>
+          <div class="text-[13px] text-gray-600 font-[400] mt-1">
+            Bayar langsung via kartu/VA/e-wallet/QRIS (Midtrans).
+          </div>
+        </button>
+        <button
+          v-else
           disabled
           class="w-full bg-gray-200 text-gray-500 font-[700] rounded-xl px-4 py-4 text-left cursor-not-allowed"
         >
@@ -346,6 +357,7 @@
 <script>
 import HeaderItem from "@/components/header/HeaderItem.vue";
 import FormDonation from "@/components/form/FormDonation.vue";
+import { isMidtransEnabled } from "@/utils/midtransPayment";
 
 export default {
   name: "DonationView",
@@ -406,12 +418,14 @@ export default {
         },
       ],
 
+      midtransEnabled: isMidtransEnabled(),
+
       paymentMethods: [
-        {
+        ...(isMidtransEnabled() ? [{
           title: "Online (Midtrans)",
           description:
             "Bayar langsung via kartu kredit, transfer bank, e-wallet, atau QRIS melalui jendela pembayaran Midtrans.",
-        },
+        }] : []),
         {
           title: "Manual (Transfer Bank)",
           description:
@@ -431,8 +445,10 @@ export default {
 
       additionalNotes: [
         "Kode unik = 3 digit kode fakultas Anda; kode akan muncul di form setelah memilih fakultas.",
-        "Kode unik fakultas ditambahkan ke nominal donasi pada kedua metode pembayaran, termasuk Midtrans.",
-        "Pembayaran online via Midtrans tidak memerlukan upload bukti bayar karena terkonfirmasi otomatis.",
+        ...(isMidtransEnabled() ? [
+          "Kode unik fakultas ditambahkan ke nominal donasi pada kedua metode pembayaran, termasuk Midtrans.",
+          "Pembayaran online via Midtrans tidak memerlukan upload bukti bayar karena terkonfirmasi otomatis.",
+        ] : []),
         "Gunakan nomor WhatsApp dan email aktif agar informasi konfirmasi dapat diterima dengan baik.",
       ],
     };
@@ -470,8 +486,7 @@ export default {
       }
     },
 
-    // Belum terpakai selama tombol Pembayaran Otomatis dinonaktifkan.
-    // Dipertahankan agar mengaktifkannya kembali cukup mengembalikan tombolnya.
+    // Hanya terjangkau bila isMidtransEnabled() — lihat tombol Pembayaran Otomatis.
     chooseMidtrans() {
       this.isChooserOpen = false;
       this.isDonationOpen = true;
